@@ -8,9 +8,11 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Configuration
 @EnableAuthorizationServer
+@CrossOrigin(origins = "*")
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     static final String CLIEN_ID = "rest-client";
@@ -22,7 +24,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     static final String SCOPE_READ = "read";
     static final String SCOPE_WRITE = "write";
     static final String TRUST = "trust";
-    static final int ACCESS_TOKEN_VALIDITY_SECONDS = 1*60*60;
+    static final int ACCESS_TOKEN_VALIDITY_SECONDS = 10*60*60;
     static final int FREFRESH_TOKEN_VALIDITY_SECONDS = 6*60*60;
 
     @Autowired
