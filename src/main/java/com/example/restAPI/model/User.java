@@ -3,6 +3,8 @@ package com.example.restAPI.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "users")
 public class User {
@@ -19,6 +21,16 @@ public class User {
     private long salary;
     @Column
     private int age;
+
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Role> roles;
+
+    public User(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    public User(){}
 
     public long getId() {
         return id;
@@ -58,5 +70,13 @@ public class User {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }

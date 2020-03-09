@@ -1,6 +1,7 @@
 package com.example.restAPI.service.impl;
 
 import com.example.restAPI.dao.UserDao;
+import com.example.restAPI.model.Role;
 import com.example.restAPI.model.User;
 import com.example.restAPI.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +21,25 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Autowired
     private UserDao userDao;
 
+    private String prefijo = "ROLE_";
+
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         User user = userDao.findByUsername(userId);
         if(user == null){
             throw new UsernameNotFoundException("Invalid username or password.");
         }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), getAuthority());
+        System.out.println(user.getRoles().get(0).getRole());
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), getAuthority(user.getRoles()));
     }
 
-    private List<SimpleGrantedAuthority> getAuthority() {
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
+    private List<SimpleGrantedAuthority> getAuthority(List<Role> roles) {
+
+        List<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+        for(Role rol: roles)
+            authorities.add(new SimpleGrantedAuthority(prefijo+rol.getRole()));
+
+        //return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        return authorities;
     }
 
     public List<User> findAll() {
